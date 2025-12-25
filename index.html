@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Maggie ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #ffcf4d;
+            --white: #ffffff;
+            --bg: #050a14;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --ribbon: #c41e3a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- LOADING GIFT SCREEN --- */
+        #gift-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #0a162b 0%, #050a14 100%);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 1000; transition: all 1s ease;
+        }
+
+        .gift-box {
+            width: 100px; height: 100px; background: #eee;
+            position: relative; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: bounce 2s infinite; cursor: pointer;
+        }
+
+        .gift-box::before { content: ''; position: absolute; left: 40px; width: 20px; height: 100%; background: var(--ribbon); }
+        .gift-box::after { content: ''; position: absolute; top: 40px; width: 100%; height: 20px; background: var(--ribbon); }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1) translateY(-10px); }
+        }
+
+        /* --- MAIN CONTENT (SCROLLABLE) --- */
+        #main-content { display: none; opacity: 0; transition: opacity 2s; }
+
+        section {
+            min-height: 100vh;
+            width: 100%;
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Section 1: The Tree */
+        .tree-container { width: 100%; max-width: 350px; position: relative; }
+        svg { width: 100%; height: auto; filter: drop-shadow(0 0 15px var(--gold)); }
+
+        .tree-stroke {
+            fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-linecap: round;
+            stroke-dasharray: 1000; stroke-dashoffset: 1000;
+        }
+
+        .draw { animation: drawPath 5s ease-out forwards; }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+
+        .maggie-name {
+            font-family: 'Great Vibes', cursive; font-size: 3.5rem;
+            color: var(--gold); margin: 20px 0 0 0;
+        }
+
+        /* Section 2: Personal Message */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 320px;
+            margin-top: 20px;
+        }
+
+        .card h2 { color: var(--gold); font-weight: 400; margin-bottom: 15px; }
+        .card p { font-weight: 200; line-height: 1.6; font-size: 0.95rem; }
+
+        /* Section 3: Friendship List */
+        .list-item {
+            margin: 15px 0;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #ccc;
+            border-bottom: 1px solid rgba(255,215,0,0.1);
+            padding-bottom: 10px;
+        }
+
+        .scroll-hint {
+            position: absolute; bottom: 20px; font-size: 0.7rem;
+            letter-spacing: 3px; opacity: 0.5; animation: fadeOut 2s infinite;
+        }
+
+        @keyframes fadeOut { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.6; } }
+
+        .snow { position: absolute; background: white; border-radius: 50%; pointer-events: none; z-index: 50; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.chosic.com/wp-content/uploads/2021/11/We-Wish-You-A-Merry-Christmas.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="gift-overlay" onclick="startApp()">
+        <div class="gift-box"></div>
+        <h3 style="margin-top:20px; letter-spacing: 5px; font-weight: 200;">FOR MAGGIE</h3>
+        <p style="font-size: 0.6rem; opacity: 0.5;">( Tap the gift to unwrap )</p>
+    </div>
+
+    <div id="main-content">
+        <section id="hero">
+            <div class="tree-container">
+                <svg viewBox="0 0 200 240">
+                    <path class="tree-stroke tier" d="M30,220 C30,220 50,180 100,180 C150,180 170,220 170,220 L30,220" />
+                    <path class="tree-stroke tier" style="animation-delay: 1s;" d="M45,170 C45,170 60,135 100,135 C140,135 155,170 155,170 L45,170" />
+                    <path class="tree-stroke tier" style="animation-delay: 2s;" d="M60,125 C60,125 75,95 100,95 C125,95 140,125 140,125 L60,125" />
+                    <path class="tree-stroke tier" style="animation-delay: 3s;" d="M80,85 C80,85 100,55 100,55 L120,85 L80,85" />
+                    <polygon id="star" points="100,20 108,38 127,38 112,49 118,67 100,56 82,67 88,49 73,38 92,38" fill="var(--gold)" style="opacity:0;" />
+                </svg>
+            </div>
+            <h1 class="maggie-name">Merry Christmas</h1>
+            <p style="letter-spacing: 5px; font-size: 0.8rem; color: var(--gold);">MAGGIE</p>
+            <div class="scroll-hint">SCROLL DOWN ↓</div>
+        </section>
+
+        <section id="message">
+            <div class="card">
+                <h2>To my Best Friend</h2>
+                <p>Christmas is about being grateful for the people who make life brighter. Thank you for being the person I can always count on.</p>
+                <p style="margin-top: 15px; font-style: italic;">"You're the star on top of my tree."</p>
+            </div>
+        </section>
+
+        <section id="reasons">
+            <h3 style="color: var(--gold); letter-spacing: 3px; margin-bottom: 30px;">2025 HIGHLIGHTS</h3>
+            <div class="list-item">Always being there to listen</div>
+            <div class="list-item">Making every moment an adventure</div>
+            <div class="list-item">The best laughs we've shared</div>
+            <div class="list-item">Being the incredible person you are</div>
+            
+            <p style="margin-top: 50px; font-size: 0.7rem; opacity: 0.4;">Made with ❤️ just for you</p>
+        </section>
+    </div>
+
+    <script>
+        function startApp() {
+            const music = document.getElementById("bgMusic");
+            music.volume = 0.4;
+            music.play();
+
+            document.getElementById('gift-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('gift-overlay').style.display = 'none';
+                const main = document.getElementById('main-content');
+                main.style.display = 'block';
+                setTimeout(() => {
+                    main.style.opacity = '1';
+                    document.querySelectorAll('.tier').forEach(t => t.classList.add('draw'));
+                    setTimeout(() => { document.getElementById('star').style.opacity = '1'; }, 4500);
+                    createSnow();
+                }, 100);
+            }, 1000);
+        }
+
+        function createSnow() {
+            for (let i = 0; i < 60; i++) {
+                let flake = document.createElement('div');
+                flake.className = 'snow';
+                let size = Math.random() * 3 + 1;
+                flake.style.width = size + 'px';
+                flake.style.height = size + 'px';
+                flake.style.left = Math.random() * 100 + 'vw';
+                flake.style.top = Math.random() * 100 + 'vh';
+                flake.style.opacity = Math.random();
+                document.body.appendChild(flake);
+
+                flake.animate([
+                    { transform: 'translateY(0vh)' },
+                    { transform: 'translateY(100vh)' }
+                ], {
+                    duration: (Math.random() * 5 + 5) * 1000,
+                    iterations: Infinity
+                });
+            }
+        }
+    </script>
+</body>
+</html>
